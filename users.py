@@ -1,9 +1,11 @@
-members = [
-    { "MID": "M001", "name": "John Doe", "DOB": "1999-08-01", "join_date": "2025-01-01", "expiry_date": "2025-01-01", "address": "New Baneshwor"},
-    { "MID": "M002", "name": "Rajesh Hamal", "DOB": "1992-08-01", "join_date": "2025-01-01", "expiry_date": "2025-01-01", "address": "Bharatpur"},
-    { "MID": "M003", "name": "Rishi Dhamala", "DOB": "1994-08-01", "join_date": "2025-01-01", "expiry_date": "2025-01-01", "address": "Gorkha"},
-    { "MID": "M004", "name": "Jyoti Magar", "DOB": "1993-08-01", "join_date": "2025-01-01", "expiry_date": "2025-01-01", "address": "Durbarmarg"},
-]
+import csv
+
+# with open('users.csv', 'r') as file:
+#     reader = csv.reader(file)
+
+#     #Let's look at the content of the file
+#     for row in reader:
+#         print(row)
 
 #Function that displays Main Menu
 def display_member_menu():
@@ -15,9 +17,9 @@ def display_member_menu():
     print("1. Display All Members")
     print("2. Add A New Member")
     print("3. View Library Card")
-    print("4. Exit Application")
+    print("4. Back to Main Menu")
 
-def add_new_user():
+def add_new_member():
     #Ask user to add details of new member
     mid = input("Enter Member ID: ")
     name = input("Enter name of member: ")
@@ -27,15 +29,12 @@ def add_new_user():
     address = input("Enter Address")
 
     #Create a new dictionary with input data
-    newMember = {
-        "MID": mid,
-        "name": name,
-        "DOB": dob,
-        "join_date": join_date,
-        "expiry_date": expiry_date,
-        "address": address
-    }
-    return newMember
+    newMember = [mid, name, dob, join_date, expiry_date, address]
+
+    with open('users.csv', 'w') as membersFromFile:
+        memberWriter = csv.writer(membersFromFile)
+        memberWriter.writerow(newMember)
+    
 
 def display_all_members():
     #Display all the members
@@ -43,15 +42,30 @@ def display_all_members():
         "MID", "NAME", "DOB", "JOIN DATE", "EXP DATE", "ADDRESS"
     ))
     print("-"*80)
-    for member in members:
-        print("{:<8} {:<15} {:<12} {:<12} {:<12} {:<40}".format(
-            member["MID"],
-            member["name"],
-            member["DOB"],
-            member["join_date"],
-            member["expiry_date"],
-            member["address"]
-        ))
+
+    #Open File
+    with open('users.csv', 'r') as usersFile:
+        membersFromFile = csv.reader(usersFile)
+        next(membersFromFile)
+
+        for member in membersFromFile:
+            print("{:<8} {:<15} {:<12} {:<12} {:<12} {:<40}".format(
+                member[0],
+                member[1],
+                member[2],
+                member[3],
+                member[4],
+                member[5]
+            ))
+    # for member in members:
+    #     print("{:<8} {:<15} {:<12} {:<12} {:<12} {:<40}".format(
+    #         member["MID"],
+    #         member["name"],
+    #         member["DOB"],
+    #         member["join_date"],
+    #         member["expiry_date"],
+    #         member["address"]
+    #     ))
 #MAIN PROGRAM STARTS
 
 def member_management_loop():
@@ -66,8 +80,7 @@ def member_management_loop():
         if choice == 1:
             display_all_members()
         elif choice == 2:
-            newMember = add_new_user()
-            members.append(newMember)
+            add_new_member()
         elif choice == 3:
             #Ask user for member ID, and display library card
             print("Here I will display Library card")
