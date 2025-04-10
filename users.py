@@ -1,18 +1,8 @@
 import csv
 
-# with open('users.csv', 'r') as file:
-#     reader = csv.reader(file)
-
-#     #Let's look at the content of the file
-#     for row in reader:
-#         print(row)
-
 #Function that displays Main Menu
 def display_member_menu():
     # Display a Member Management Menu
-    #1. Display All the Member
-    #2. Add a new member
-    #3. Display Library Card for a Member
     print("******* MEMBER MANAGEMENT MENU *******")
     print("1. Display All Members")
     print("2. Add A New Member")
@@ -31,7 +21,7 @@ def add_new_member():
     #Create a new dictionary with input data
     newMember = [mid, name, dob, join_date, expiry_date, address]
 
-    with open('users.csv', 'w') as membersFromFile:
+    with open('users.csv', 'a') as membersFromFile:
         memberWriter = csv.writer(membersFromFile)
         memberWriter.writerow(newMember)
     
@@ -57,17 +47,34 @@ def display_all_members():
                 member[4],
                 member[5]
             ))
-    # for member in members:
-    #     print("{:<8} {:<15} {:<12} {:<12} {:<12} {:<40}".format(
-    #         member["MID"],
-    #         member["name"],
-    #         member["DOB"],
-    #         member["join_date"],
-    #         member["expiry_date"],
-    #         member["address"]
-    #     ))
-#MAIN PROGRAM STARTS
 
+def display_card_format(member):
+    #Print Card ko Design
+    print("+" + "-"*50 + "+")
+    print("|          IDENTITY CARD          |")
+    print("+" + "-"*20 + "+")
+    print("ID        : " + member[0] + " |")
+    print("Name      : " + member[1] + " |")
+    print("DOB       : " + member[2] + " |")
+    print("Join Date : " + member[3] + " |")
+    print("Expiry    : " + member[4] + " |")
+    print("Addres    : " + member[5] + " |")
+
+def display_library_card(memberId):
+    #Open the file
+    with open('users.csv', 'r') as membersFromFile:
+        reader = csv.reader(membersFromFile)
+        next(reader)
+        for member in reader:
+            currentMemberId = member[0]
+            if currentMemberId == memberId:
+                #We got the right row, now display library card
+                display_card_format(member)
+                break
+    #Find the right row using memberID
+    #Display that row in a card format
+
+#MAIN PROGRAM STARTS
 def member_management_loop():
     #Main Function Loop
     while True:
@@ -83,7 +90,9 @@ def member_management_loop():
             add_new_member()
         elif choice == 3:
             #Ask user for member ID, and display library card
-            print("Here I will display Library card")
+            # print("Here I will display Library card")
+            memberId = input("Enter Member ID: ")
+            display_library_card(memberId)
         elif choice == 4:
             break
         else:
